@@ -156,6 +156,7 @@ cython_debug/
 .streamlit/secrets.toml
 vector_store/*
 research.ipynb
+Content\Newton.docx
 
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can

@@ -125,7 +125,7 @@ try:
     retriever = vectors.as_retriever()
     retrieval_chain = create_retrieval_chain(retriever, document_chain)
     # qa = RetrievalQA.from_chain_type(document_chain, retriever)
-    lcorner, _, rcorner = st.columns([1,4,1])
+    lcorner, _, rcorner = st.columns([1,5,1])
     if lcorner.button("Clear Chat"):
             clear()
     rcorner.link_button("Back to Website", 'https://rahulmanocha.vercel.app/')
