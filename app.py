@@ -40,7 +40,7 @@ def load_vectors():
     def load_multiple_files(directory_path):
         documents = []
         urls = ['https://github.com/RahulManocha21?tab=repositories',
-                'https://rahulmanocha.onrender.com/',
+                'https://rahulmanocha.vercel.app/',
                 'https://www.linkedin.com/in/manocharahul/'
                 ]
         for url in urls:
