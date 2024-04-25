@@ -102,7 +102,7 @@ def text_to_speech(text, lang='en'):
     os.remove(filename)
    
 
-st.set_page_config(page_title='Chat with me', page_icon='📝', layout='wide', initial_sidebar_state="collapsed")
+st.set_page_config(page_title='Chat with Newton', page_icon='📝', layout='wide', initial_sidebar_state="collapsed")
 try:
     ######Initialization 
     llm = ChatGroq(groq_api_key=os.environ['GROQ_API_KEY'], model_name="llama3-70b-8192",
@@ -125,8 +125,11 @@ try:
     retriever = vectors.as_retriever()
     retrieval_chain = create_retrieval_chain(retriever, document_chain)
     # qa = RetrievalQA.from_chain_type(document_chain, retriever)
-    if st.button("Clear Chat"):
+    lcorner, _, rcorner = st.columns([1,4,1])
+    if lcorner.button("Clear Chat"):
             clear()
+    rcorner.link_button("Back to Website", 'https://rahulmanocha.vercel.app/')
+    
     if "messages" not in st.session_state:
             clear()
     chatcontainer = st.container(border=True, height=330)
