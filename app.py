@@ -129,7 +129,6 @@ try:
     if lcorner.button("Clear Chat"):
             clear()
     rcorner.link_button("Back to Website", 'https://rahulmanocha.vercel.app/')
-    
     if "messages" not in st.session_state:
             clear()
     chatcontainer = st.container(border=True, height=330)
