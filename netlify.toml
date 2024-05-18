@@ -1,0 +1,4 @@
+[[redirects]]
+  from = "*"
+  to = "vercel_app.py"
+  status = 404
