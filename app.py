@@ -10,11 +10,8 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain.chains import create_retrieval_chain
 from langchain_community.vectorstores import FAISS
 import time
-from gtts import gTTS
 import pickle
 import hashlib
-from pydub import AudioSegment
-from pydub.playback import play
 
 
 os.environ["GROQ_API_KEY"]= st.secrets["GROQ_API_KEY"]
@@ -93,13 +90,13 @@ def clear():
             st.session_state.messages = []
             st.session_state.messages.append({"role": "assistant", "content": "🙋🏼Welcome! Allow me to introduce Newton, my AI Assistant. He's adept at giving you a quick rundown about me. Feel free to engage in a pleasant conversation with him. Enjoy your time here!👋"})
             
-def text_to_speech(text, lang='en'):
-    filename='output.mp3'
-    tts = gTTS(text=text, lang=lang, tld='com')
-    tts.save(filename)
-    sound = AudioSegment.from_file("output.mp3", format="mp3")
-    play(sound)
-    os.remove(filename)
+# def text_to_speech(text, lang='en'):
+#     filename='output.mp3'
+#     tts = gTTS(text=text, lang=lang, tld='com')
+#     tts.save(filename)
+#     sound = AudioSegment.from_file("output.mp3", format="mp3")
+#     play(sound)
+#     os.remove(filename)
    
 
 st.set_page_config(page_title='Chat with Newton', page_icon='📝', layout='wide', initial_sidebar_state="collapsed")
