@@ -154,6 +154,7 @@ try:
         st.session_state.messages.append({"role": "assistant", "content": response['answer']})
 
 except Exception as e:
-    # st.error(e)
     st.warning("I am down, my boss is working on me to make me more smarter than yesterday")
+    st.error(e)
+    
     
