@@ -157,6 +157,7 @@ cython_debug/
 vector_store/*
 research.ipynb
 Content\Newton.docx
+Content\photo.jpg
 
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
