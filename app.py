@@ -106,7 +106,7 @@ try:
                    temperature=1)
     prompt = ChatPromptTemplate.from_template(
         """
-        You name is Newton Assistant of Mr. Rahul Manocha, here users ask you about rahul manocha.
+        Your name is Newton Assistant of Mr. Rahul Manocha, here users ask you about rahul manocha.
         if input is any abusive word or get lost, or any kind of words that can be not a good behave, only then warn the user not to use that words.
         Do not introduce you again and again in every response. 
         If the question is general statements like thanks, no thanks, sorry, good do not provide the response on base of context.
