@@ -102,7 +102,7 @@ def clear():
 st.set_page_config(page_title='Chat with Newton', page_icon='📝', layout='wide', initial_sidebar_state="collapsed")
 try:
     ######Initialization 
-    llm = ChatGroq(groq_api_key=os.environ['GROQ_API_KEY'], model_name="llama3-70b-8192",
+    llm = ChatGroq(groq_api_key=os.environ['GROQ_API_KEY'], model_name="llama-3.3-70b-versatile",
                    temperature=1)
     prompt = ChatPromptTemplate.from_template(
         """
