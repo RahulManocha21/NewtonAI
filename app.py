@@ -3,11 +3,11 @@ import os
 from langchain_groq import ChatGroq
 from langchain_community.document_loaders import PyPDFLoader, WebBaseLoader
 from langchain_community.document_loaders.csv_loader import CSVLoader
-from langchain_community.embeddings import HuggingFaceBgeEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
-from langchain.chains import create_retrieval_chain
+from langchain_core.runnables import RunnablePassthrough
+from langchain_core.output_parsers import StrOutputParser
 from langchain_community.vectorstores import FAISS
 import time
 import pickle
@@ -62,7 +62,7 @@ def load_vectors():
         if catalog_hash != stored_catalog_hash:
             # Regenerate the vector store
             with st.spinner('Updating vector store...'):
-                embeddings = HuggingFaceBgeEmbeddings(model_name="BAAI/bge-small-en-v1.5", encode_kwargs={'normalize_embeddings': True})
+                embeddings = HuggingFaceEmbeddings(model_name="BAAI/bge-small-en-v1.5", encode_kwargs={'normalize_embeddings': True})
                 docs = load_multiple_files(CATALOG_DIR)
                 text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
                 final_documents = text_splitter.split_documents(docs)
@@ -74,7 +74,7 @@ def load_vectors():
     else:
         # Create a new vector store
         with st.spinner('Updating vector store...'):
-            embeddings = HuggingFaceBgeEmbeddings(model_name="BAAI/bge-small-en-v1.5", encode_kwargs={'normalize_embeddings': True})
+            embeddings = HuggingFaceEmbeddings(model_name="BAAI/bge-small-en-v1.5", encode_kwargs={'normalize_embeddings': True})
             docs = load_multiple_files(CATALOG_DIR)
             text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
             final_documents = text_splitter.split_documents(docs)
@@ -104,11 +104,11 @@ try:
     ######Initialization 
     llm = ChatGroq(groq_api_key=os.environ['GROQ_API_KEY'], model_name="llama-3.3-70b-versatile",
                    temperature=1)
-    prompt = ChatPromptTemplate.from_template(
+    chat_prompt = ChatPromptTemplate.from_template(
         """
         Your name is Newton Assistant of Mr. Rahul Manocha, here users ask you about rahul manocha.
         if input is any abusive word or get lost, or any kind of words that can be not a good behave, only then warn the user not to use that words.
-        Do not introduce you again and again in every response. 
+        Do not introduce you again and again in every response.
         If the question is general statements like thanks, no thanks, sorry, good do not provide the response on base of context.
         <context>
         {context}
@@ -118,9 +118,17 @@ try:
         """
     )
     vectors = load_vectors()
-    document_chain = create_stuff_documents_chain(llm, prompt)
     retriever = vectors.as_retriever()
-    retrieval_chain = create_retrieval_chain(retriever, document_chain)
+
+    def format_docs(docs):
+        return "\n\n".join(doc.page_content for doc in docs)
+
+    retrieval_chain = (
+        RunnablePassthrough.assign(context=lambda x: format_docs(retriever.invoke(x["input"])))
+        | chat_prompt
+        | llm
+        | StrOutputParser()
+    )
     # qa = RetrievalQA.from_chain_type(document_chain, retriever)
     lcorner, mid, rcorner = st.columns([1,5,1])
     if lcorner.button("Clear Chat"):
@@ -148,10 +156,10 @@ try:
             chatcontainer.write(prompt)
 
         with chatcontainer.chat_message("assistant", avatar='👤'):
-            response  =  retrieval_chain.invoke({'input':prompt, 'history': st.session_state.messages})
-            chatcontainer.write(response['answer'])
-            
-        st.session_state.messages.append({"role": "assistant", "content": response['answer']})
+            response = retrieval_chain.invoke({'input': prompt, 'history': st.session_state.messages})
+            chatcontainer.write(response)
+
+        st.session_state.messages.append({"role": "assistant", "content": response})
 
 except Exception as e:
     st.warning("I am down, my boss is working on me to make me more smarter than yesterday")
