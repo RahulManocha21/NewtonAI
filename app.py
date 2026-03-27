@@ -131,13 +131,13 @@ try:
     )
     # qa = RetrievalQA.from_chain_type(document_chain, retriever)
     lcorner, mid, rcorner = st.columns([1,5,1])
-    if lcorner.button("Clear Chat"):
+    if rcorner.button("Clear Chat"):
             clear()
     mid.markdown(""" <h1 style='text-align: center; font-size: 50px;'>
                 Newton AI
             </h1>
                  """, unsafe_allow_html=True)
-    rcorner.link_button("Back to Website", 'https://rahulmanocha.vercel.app/')
+    lcorner.link_button("Back to Website", 'https://rahulmanocha.vercel.app/')
     if "messages" not in st.session_state:
             clear()
     chatcontainer = st.container(border=True, height=330)
